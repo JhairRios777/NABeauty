@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────
+# N&A Beauty — Reglas de Apache
+# ─────────────────────────────────────────────
+Options -Indexes
+ServerSignature Off
+
+RewriteEngine On
+
+# Sin RewriteBase a propósito: así el proyecto funciona igual en
+# http://localhost/NABeauty/ (subcarpeta de htdocs) que en un VirtualHost
+# con su propio puerto o en el dominio final, sin tocar este archivo.
+
+# ─────────────────────────────────────────────
+# 1. CARPETAS PRIVADAS — nunca se sirven por HTTP
+# Va ANTES de la excepción de "archivo real": si no, cualquier .sql de BD/
+# o archivo de Config/ se podría descargar con solo escribir su ruta.
+# ─────────────────────────────────────────────
+RewriteRule ^(Config|Controllers|Entity|Models|Views|Template|BD|Storage|Services|vendor)(/|$) - [F,L,NC]
+RewriteRule (^|/)\.(git|env|user\.ini|htaccess) - [F,L,NC]
+RewriteRule (^|/)composer\.(json|lock)$ - [F,L,NC]
+
+# ─────────────────────────────────────────────
+# 2. ARCHIVOS REALES (css, js, imágenes, fuentes) — se sirven directo
+# Solo archivos, no carpetas: una carpeta real cae al Front Controller.
+# ─────────────────────────────────────────────
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# ─────────────────────────────────────────────
+# 3. TODO LO DEMÁS → Front Controller
+# /catalogo/maquillaje  →  index.php?url=catalogo/maquillaje
+# ─────────────────────────────────────────────
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# ─────────────────────────────────────────────
+# 4. CACHÉ DE ESTÁTICOS
+# Los css/js llevan ?v=<fecha de modificación>, así que se pueden
+# cachear un año sin que el navegador se quede con una versión vieja.
+# ─────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css               "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType font/woff2             "access plus 1 year"
+    ExpiresByType image/png              "access plus 1 month"
+    ExpiresByType image/jpeg             "access plus 1 month"
+    ExpiresByType image/webp             "access plus 1 month"
+    ExpiresByType image/svg+xml          "access plus 1 month"
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>

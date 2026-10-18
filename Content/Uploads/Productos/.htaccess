@@ -1,0 +1,21 @@
+# Carpeta de fotos subidas desde el panel.
+# Aunque alguien lograra colar un archivo .php aquí, Apache no lo ejecuta:
+# solo se sirven imágenes, y cualquier otra cosa responde 403.
+Options -Indexes -ExecCGI
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .pl .py .cgi .sh
+RemoveType .php .phtml .phar
+<FilesMatch "(?i)^.*\.(php\d?|phtml|phar|pl|py|cgi|sh|html?|svg|js)$">
+    Require all denied
+</FilesMatch>
+<IfModule mod_headers.c>
+    <FilesMatch "(?i)\.(webp|jpe?g|png)$">
+        Header set X-Content-Type-Options "nosniff"
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
