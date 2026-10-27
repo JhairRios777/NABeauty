@@ -1,0 +1,120 @@
+<UserControl x:Class="NABeauty.App.Vistas.ProductosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:NABeauty.App">
+    <!--
+        Catálogo: búsqueda (filtra al escribir), filtros y la tabla con miniatura pequeña (36 px).
+        Doble clic o Enter sobre una fila abre la ficha del producto.
+    -->
+    <DockPanel Margin="28,22,28,24">
+
+        <!-- ── Barra de filtros ── -->
+        <Grid DockPanel.Dock="Top" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="220" MaxWidth="380"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Búsqueda con texto de ayuda -->
+            <Grid Grid.Column="0" Margin="0,0,10,0">
+                <TextBox x:Name="Buscador" Text="{Binding Texto, UpdateSourceTrigger=PropertyChanged, Delay=200}" Padding="34,6,9,6"/>
+                <TextBlock Text="&#xE721;" FontFamily="{StaticResource Iconos}" FontSize="13" Foreground="{DynamicResource Texto3}"
+                           VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False"/>
+                <TextBlock Text="Buscar por nombre, marca, tono, SKU o código" Foreground="{DynamicResource Texto3}" VerticalAlignment="Center"
+                           Margin="35,0,0,0" IsHitTestVisible="False" TextTrimming="CharacterEllipsis"
+                           Visibility="{Binding Texto, Converter={StaticResource NuloVis}, ConverterParameter=inv}"/>
+            </Grid>
+            <ComboBox Grid.Column="1" Width="200" Margin="0,0,10,0" ItemsSource="{Binding Categorias}" SelectedItem="{Binding Categoria}"/>
+            <ComboBox Grid.Column="2" Width="130" Margin="0,0,14,0" ItemsSource="{Binding OpcionesEstado}" SelectedItem="{Binding Estado}"/>
+            <CheckBox Grid.Column="3" IsChecked="{Binding SoloPorReponer}" VerticalAlignment="Center" Margin="0,0,10,0">
+                <TextBlock Text="Por reponer"/>
+            </CheckBox>
+            <Button Grid.Column="4" Style="{StaticResource BtnEnlace}" Content="Limpiar filtros" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Command="{Binding LimpiarCommand}" Visibility="{Binding HayFiltros, Converter={StaticResource BoolVis}}"/>
+            <StackPanel Grid.Column="5" Orientation="Horizontal">
+                <Button Content="Categorías" Command="{Binding IrCategoriasCommand}"
+                        Visibility="{Binding PuedeCategorias, Converter={StaticResource BoolVis}}"/>
+                <Button Style="{StaticResource BtnPrimario}" Margin="0" Command="{Binding NuevoCommand}"
+                        Visibility="{Binding PuedeEditar, Converter={StaticResource BoolVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE710;" FontFamily="{StaticResource Iconos}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Nuevo producto"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Tabla ── -->
+        <Border Style="{StaticResource Tarjeta}" Margin="0" Padding="0">
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Padding="18,12" BorderBrush="{DynamicResource Linea}" BorderThickness="0,0,0,1">
+                    <TextBlock Text="{Binding Conteo}" Style="{StaticResource TxtTenue}"/>
+                </Border>
+
+                <!-- Vacío (sin categorías / sin productos / sin coincidencias) -->
+                <StackPanel DockPanel.Dock="Top" Margin="24,48" HorizontalAlignment="Center" MaxWidth="460"
+                            Visibility="{Binding HayProductos, Converter={StaticResource NoBoolVis}}">
+                    <TextBlock Text="&#xE7B8;" FontFamily="{StaticResource Iconos}" FontSize="30" Foreground="{DynamicResource AcentoTinta}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding MensajeVacio}" TextWrapping="Wrap" TextAlignment="Center" Margin="0,12,0,14" Foreground="{DynamicResource Texto2}"/>
+                    <Button Style="{StaticResource BtnPrimario}" Content="Crear categorías" HorizontalAlignment="Center" Margin="0"
+                            Command="{Binding IrCategoriasCommand}" Visibility="{Binding SinCategorias, Converter={StaticResource BoolVis}}"/>
+                </StackPanel>
+
+                <DataGrid x:Name="Tabla" ItemsSource="{Binding Lista}" RowHeight="54" PreviewKeyDown="Tabla_KeyDown"
+                          loc:Comportamientos.DobleClic="{Binding AbrirCommand}"
+                          Visibility="{Binding HayProductos, Converter={StaticResource BoolVis}}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="PRODUCTO" Width="2.4*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <ContentControl DockPanel.Dock="Left" Style="{StaticResource Miniatura}" Content="{Binding Foto}"
+                                                        Width="38" Height="38" Margin="0,0,12,0"/>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Nombre}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding Marca}" Style="{StaticResource TxtTenue}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="CATEGORÍA" Width="1.2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Style="{StaticResource PuntoColor}" Tag="{Binding CategoriaColor}" Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding Categoria}" Style="{StaticResource CeldaTexto}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="OPCIONES" Binding="{Binding Opciones}" Width="1*" ElementStyle="{StaticResource CeldaTexto}"/>
+                        <DataGridTextColumn Header="PRECIO" Binding="{Binding Precio}" Width="1.3*" ElementStyle="{StaticResource CeldaNum}"/>
+                        <DataGridTemplateColumn Header="STOCK" Width="1.6*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource Insignia}" Tag="{Binding EstadoStock}" Margin="8,0,0,0">
+                                        <TextBlock Text="{Binding EstadoStockTexto}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="52">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource BtnIcono}" Width="32" Height="32" FontSize="12" Content="&#xE76C;" ToolTip="Abrir"
+                                            Command="{Binding DataContext.AbrirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </DockPanel>
+</UserControl>

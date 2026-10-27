@@ -1,0 +1,222 @@
+<UserControl x:Class="NABeauty.App.Vistas.EntradasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:NABeauty.App.Controles">
+    <!--
+        Inventario. Pestaña "Entradas": mercadería que llega (lista + detalle). Pestaña "Ajustes":
+        corregir el stock con motivo (conteo físico o sumar/restar) e historial de ajustes.
+    -->
+    <UserControl.Resources>
+        <Style x:Key="Pestana" TargetType="Button" BasedOn="{StaticResource BtnChip}">
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13.5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel Margin="28,20,28,22">
+        <!-- ── Pestañas + período ── -->
+        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,14">
+            <Button DockPanel.Dock="Right" Style="{StaticResource BtnPrimario}" Margin="0" Command="{Binding NuevaCommand}"
+                    Visibility="{Binding VerEntradas, Converter={StaticResource BoolVis}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE710;" FontFamily="{StaticResource Iconos}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Nueva entrada"/>
+                </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="TabEntradas" Style="{StaticResource Pestana}" Content="Entradas" Command="{Binding TabCommand}" CommandParameter="entradas"
+                        Visibility="{Binding PuedeEntradas, Converter={StaticResource BoolVis}}"/>
+                <Button x:Name="TabAjustes" Style="{StaticResource Pestana}" Content="Ajustes de inventario" Command="{Binding TabCommand}" CommandParameter="ajustes"
+                        Visibility="{Binding PuedeAjustes, Converter={StaticResource BoolVis}}"/>
+                <c:SelectorPeriodoView DataContext="{Binding Periodo}" Margin="12,0,0,8"/>
+            </StackPanel>
+        </DockPanel>
+
+        <Grid>
+            <!-- ═════════ Entradas ═════════ -->
+            <Grid Visibility="{Binding VerEntradas, Converter={StaticResource BoolVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="420"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="380"/>
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Tarjeta}" Margin="0" Padding="0">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="18,12" BorderBrush="{DynamicResource Linea}" BorderThickness="0,0,0,1">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Right" Width="240">
+                                    <TextBox Text="{Binding Texto, UpdateSourceTrigger=PropertyChanged, Delay=250}" Padding="32,6,9,6"/>
+                                    <TextBlock Text="&#xE721;" FontFamily="{StaticResource Iconos}" FontSize="12" Foreground="{DynamicResource Texto3}"
+                                               VerticalAlignment="Center" Margin="11,0,0,0" IsHitTestVisible="False"/>
+                                    <TextBlock Text="Proveedor, número o producto" Foreground="{DynamicResource Texto3}" VerticalAlignment="Center" Margin="33,0,0,0"
+                                               IsHitTestVisible="False" Visibility="{Binding Texto, Converter={StaticResource NuloVis}, ConverterParameter=inv}"/>
+                                </Grid>
+                                <TextBlock Text="{Binding Resumen}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+                        <StackPanel DockPanel.Dock="Top" Margin="24,48" HorizontalAlignment="Center" Visibility="{Binding HayEntradas, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE896;" FontFamily="{StaticResource Iconos}" FontSize="30" Foreground="{DynamicResource Texto3}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="No hay entradas en este período." Foreground="{DynamicResource Texto2}" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Registra aquí la mercadería que llega: el stock sube solo." Style="{StaticResource TxtTenue}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding Lista}" SelectedItem="{Binding Seleccionada}" RowHeight="46"
+                                  Visibility="{Binding HayEntradas, Converter={StaticResource BoolVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ENTRADA" Binding="{Binding Numero}" Width="90" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTextColumn Header="FECHA" Binding="{Binding FechaTexto}" Width="130" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTextColumn Header="PROVEEDOR" Binding="{Binding ProveedorTexto}" Width="*" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTextColumn Header="UNIDADES" Binding="{Binding Unidades}" Width="90" ElementStyle="{StaticResource CeldaNum}"/>
+                                <DataGridTextColumn Header="COSTO" Binding="{Binding TotalTexto}" Width="120" ElementStyle="{StaticResource CeldaNum}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Margin="0">
+                    <Grid>
+                        <StackPanel Margin="0,40" HorizontalAlignment="Center" Visibility="{Binding HaySeleccion, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE8A1;" FontFamily="{StaticResource Iconos}" FontSize="26" Foreground="{DynamicResource Texto3}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Elige una entrada para ver su detalle." Foreground="{DynamicResource Texto2}" Margin="0,10,0,0"/>
+                        </StackPanel>
+                        <DockPanel Visibility="{Binding HaySeleccion, Converter={StaticResource BoolVis}}">
+                            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                                <TextBlock Text="{Binding Seleccionada.Numero}" Style="{StaticResource TxtMarca}" FontSize="22" Foreground="{DynamicResource AcentoTinta}"/>
+                                <TextBlock Text="{Binding Seleccionada.ProveedorTexto}" FontWeight="SemiBold"/>
+                                <TextBlock Style="{StaticResource TxtTenue}">
+                                    <Run Text="{Binding Seleccionada.FechaTexto, Mode=OneWay}"/><Run Text=" · "/><Run Text="{Binding Seleccionada.Usuario, Mode=OneWay}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Seleccionada.Nota}" Style="{StaticResource TxtTenue}" Margin="0,4,0,0"
+                                           Visibility="{Binding Seleccionada.Nota, Converter={StaticResource NuloVis}}"/>
+                            </StackPanel>
+                            <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding Seleccionada.TotalTexto}" FontFamily="{StaticResource FuenteNumeros}" FontSize="20" FontWeight="Bold"
+                                           Foreground="{DynamicResource AcentoTinta}"/>
+                                <TextBlock Text="COSTO TOTAL" Style="{StaticResource TxtMarca}" FontSize="17" VerticalAlignment="Center"/>
+                            </DockPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Lineas}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource FilaLista}">
+                                                <DockPanel>
+                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding SubtotalTexto}" Style="{StaticResource TxtMonto}" VerticalAlignment="Center"/>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Nombre}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                                        <TextBlock Style="{StaticResource TxtTenue}">
+                                                            <Run Text="+"/><Run Text="{Binding Cantidad, Mode=OneWay}"/><Run Text=" × "/><Run Text="{Binding CostoTexto, Mode=OneWay}"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ═════════ Ajustes ═════════ -->
+            <Grid Visibility="{Binding VerAjustes, Converter={StaticResource BoolVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Formulario -->
+                <Border Style="{StaticResource Tarjeta}" Margin="0">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Nuevo ajuste" Style="{StaticResource TxtTitulo}"/>
+                            <Grid Margin="0,0,0,8">
+                                <TextBox Text="{Binding BuscarAjuste, UpdateSourceTrigger=PropertyChanged, Delay=200}" Padding="32,6,9,6"/>
+                                <TextBlock Text="&#xE721;" FontFamily="{StaticResource Iconos}" FontSize="12" Foreground="{DynamicResource Texto3}"
+                                           VerticalAlignment="Center" Margin="11,0,0,0" IsHitTestVisible="False"/>
+                                <TextBlock Text="Busca o escanea el producto" Foreground="{DynamicResource Texto3}" VerticalAlignment="Center" Margin="33,0,0,0"
+                                           IsHitTestVisible="False" Visibility="{Binding BuscarAjuste, Converter={StaticResource NuloVis}, ConverterParameter=inv}"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Producto elegido + datos del ajuste -->
+                        <StackPanel DockPanel.Dock="Bottom" Visibility="{Binding HayElegido, Converter={StaticResource BoolVis}}">
+                            <Border Background="{DynamicResource AcentoSuave}" CornerRadius="8" Padding="12,10" Margin="0,10,0,12">
+                                <DockPanel>
+                                    <ContentControl DockPanel.Dock="Left" Style="{StaticResource Miniatura}" Content="{Binding Elegido.Foto}" Width="36" Height="36" Margin="0,0,10,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Elegido.Nombre}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding StockActual}" Foreground="{DynamicResource AcentoTinta}" FontSize="12.5"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <RadioButton IsChecked="{Binding Conteo}" GroupName="ModoAjuste" Content="Contar stock real"/>
+                                <RadioButton IsChecked="{Binding SumarRestar, Mode=OneWay}" GroupName="ModoAjuste" Content="Sumar o restar"
+                                             Command="{Binding ModoCommand}" CommandParameter="sumar"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding EtiquetaCantidad}" Style="{StaticResource TxtEtiqueta}"/>
+                            <DockPanel Margin="0,0,0,10">
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding Vista}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                <TextBox Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Right"/>
+                            </DockPanel>
+                            <TextBlock Text="Motivo" Style="{StaticResource TxtEtiqueta}"/>
+                            <TextBox Text="{Binding Motivo, UpdateSourceTrigger=PropertyChanged}" MaxLength="200" Margin="0,0,0,12"/>
+                            <Button Style="{StaticResource BtnPrimario}" Content="Registrar ajuste" Command="{Binding AjustarCommand}" Margin="0" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <!-- Resultados de la búsqueda -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding Resultados}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource BtnFila}" Command="{Binding DataContext.ElegirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}">
+                                            <DockPanel>
+                                                <Border DockPanel.Dock="Right" Style="{StaticResource Insignia}" Tag="{Binding EstadoStock}" Padding="6,1">
+                                                    <TextBlock Text="{Binding Stock}"/>
+                                                </Border>
+                                                <ContentControl DockPanel.Dock="Left" Style="{StaticResource Miniatura}" Content="{Binding Foto}" Width="30" Height="30" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            </DockPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
+
+                <!-- Historial -->
+                <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Margin="0" Padding="0">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="18,14" BorderBrush="{DynamicResource Linea}" BorderThickness="0,0,0,1">
+                            <TextBlock Text="Ajustes del período" Style="{StaticResource TxtSeccion}"/>
+                        </Border>
+                        <StackPanel DockPanel.Dock="Top" Margin="24,48" HorizontalAlignment="Center" Visibility="{Binding HayAjustes, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE73E;" FontFamily="{StaticResource Iconos}" FontSize="26" Foreground="{DynamicResource Verde}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Sin ajustes en este período." Foreground="{DynamicResource Texto2}" Margin="0,10,0,0"/>
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding Ajustes}" RowHeight="44" Visibility="{Binding HayAjustes, Converter={StaticResource BoolVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="FECHA" Binding="{Binding FechaTexto}" Width="130" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTextColumn Header="PRODUCTO" Binding="{Binding Nombre}" Width="1.4*" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTemplateColumn Header="CANTIDAD" Width="90">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource Insignia}" Tag="{Binding Signo}" Margin="8,0,0,0">
+                                                <TextBlock Text="{Binding CantidadTexto}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="MOTIVO" Binding="{Binding Nota}" Width="1.4*" ElementStyle="{StaticResource CeldaTexto}"/>
+                                <DataGridTextColumn Header="USUARIO" Binding="{Binding Usuario}" Width="*" ElementStyle="{StaticResource CeldaTexto}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>

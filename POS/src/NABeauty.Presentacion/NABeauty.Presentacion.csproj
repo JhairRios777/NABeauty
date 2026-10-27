@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    ViewModels (MVVM) sin dependencias de WPF: solo INotifyPropertyChanged e ICommand,
+    que vienen en .NET. La lógica de pantalla compila y se prueba en cualquier PC;
+    la UI WPF (NABeauty.App) solo dibuja y enlaza.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>NABeauty.Presentacion</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NABeauty.Data\NABeauty.Data.csproj" />
+  </ItemGroup>
+</Project>

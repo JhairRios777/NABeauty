@@ -1,0 +1,117 @@
+<UserControl x:Class="NABeauty.App.Vistas.CategoriasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Categorías: lista a la izquierda (el orden = orden de las pestañas de la caja y del menú
+        de la tienda en línea) y formulario a la derecha para crear o editar sin cambiar de pantalla.
+    -->
+    <Grid Margin="28,22,28,24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="380"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="370"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ── Lista ── -->
+        <Border Grid.Column="0" Style="{StaticResource Tarjeta}" Margin="0" Padding="0">
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Padding="20,16" BorderBrush="{DynamicResource Linea}" BorderThickness="0,0,0,1">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource BtnPrimario}" Margin="0" Command="{Binding NuevaCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE710;" FontFamily="{StaticResource Iconos}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Nueva categoría"/>
+                            </StackPanel>
+                        </Button>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Categorías" Style="{StaticResource TxtSeccion}"/>
+                            <TextBlock Text="{Binding Conteo}" Style="{StaticResource TxtTenue}"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- Vacío -->
+                <StackPanel DockPanel.Dock="Top" Margin="24,40" HorizontalAlignment="Center"
+                            Visibility="{Binding HayCategorias, Converter={StaticResource NoBoolVis}}">
+                    <TextBlock Text="&#xE8EC;" FontFamily="{StaticResource Iconos}" FontSize="30" Foreground="{DynamicResource AcentoTinta}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Todavía no hay categorías" FontWeight="SemiBold" FontSize="15" HorizontalAlignment="Center" Margin="0,12,0,4"/>
+                    <TextBlock Text="Crea la primera a la derecha: Maquillaje, Skincare, Accesorios…" Style="{StaticResource TxtTenue}" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <ListBox Style="{StaticResource Lista}" Margin="10" ItemsSource="{Binding Lista}" SelectedItem="{Binding Seleccionada}"
+                         Visibility="{Binding HayCategorias, Converter={StaticResource BoolVis}}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Style="{StaticResource PuntoColor}" Tag="{Binding Color}" Width="22" Height="22" CornerRadius="6" Margin="0,0,14,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Nombre}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding ProductosTexto}" Style="{StaticResource TxtTenue}"/>
+                                </StackPanel>
+                                <Border Grid.Column="2" Style="{StaticResource Insignia}" Tag="{Binding Estado}" Margin="10,0">
+                                    <TextBlock Text="{Binding EstadoTexto}"/>
+                                </Border>
+                                <!-- Subir / bajar en el orden -->
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <Button Style="{StaticResource BtnIcono}" Width="30" Height="30" FontSize="12" Content="&#xE70E;" ToolTip="Subir"
+                                            Command="{Binding DataContext.SubirCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                    <Button Style="{StaticResource BtnIcono}" Width="30" Height="30" FontSize="12" Content="&#xE70D;" ToolTip="Bajar"
+                                            Command="{Binding DataContext.BajarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- ── Formulario ── -->
+        <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Margin="0" VerticalAlignment="Top">
+            <StackPanel>
+                <TextBlock Text="{Binding TituloFormulario}" Style="{StaticResource TxtTitulo}"/>
+
+                <StackPanel Style="{StaticResource Campo}" Margin="0,0,0,14">
+                    <TextBlock Text="Nombre" Style="{StaticResource TxtEtiqueta}"/>
+                    <TextBox x:Name="CampoNombre" Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}" MaxLength="60" KeyDown="Nombre_KeyDown"/>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource Campo}" Margin="0,0,0,14">
+                    <TextBlock Text="Color de la etiqueta" Style="{StaticResource TxtEtiqueta}"/>
+                    <ItemsControl ItemsSource="{Binding Colores}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Width="30" Height="30" Padding="0" Margin="0,0,7,7" ToolTip="{Binding}"
+                                        Background="{Binding Converter={StaticResource ColorHex}}" BorderBrush="{DynamicResource LineaFuerte}"
+                                        Command="{Binding DataContext.ColorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <DockPanel Margin="0,4,0,0">
+                        <Border DockPanel.Dock="Left" Style="{StaticResource PuntoColor}" Tag="{Binding Color}" Width="36" Height="36" CornerRadius="6" Margin="0,0,10,0"/>
+                        <TextBox Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" MaxLength="7" ToolTip="Formato #RRGGBB"/>
+                    </DockPanel>
+                </StackPanel>
+
+                <CheckBox IsChecked="{Binding Activa}" Margin="0,0,0,4">
+                    <TextBlock Text="Visible en la caja y en la tienda en línea"/>
+                </CheckBox>
+                <TextBlock Text="Una categoría oculta no se muestra, pero sus productos no se pierden." Style="{StaticResource TxtTenue}" Margin="27,0,0,18"/>
+
+                <Button Style="{StaticResource BtnPrimario}" Content="{Binding TextoBoton}" Command="{Binding GuardarCommand}" Margin="0" HorizontalAlignment="Stretch" Padding="15,10"/>
+                <Button Style="{StaticResource BtnPeligro}" Content="Eliminar categoría" Command="{Binding EliminarCommand}" Margin="0,10,0,0" HorizontalAlignment="Stretch"
+                        Visibility="{Binding EsNueva, Converter={StaticResource NoBoolVis}}"/>
+                <TextBlock Text="Solo se puede eliminar si nunca tuvo productos; si los tuvo, ocúltala." Style="{StaticResource TxtTenue}" Margin="0,8,0,0"
+                           Visibility="{Binding EsNueva, Converter={StaticResource NoBoolVis}}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

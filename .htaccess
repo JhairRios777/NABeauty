@@ -15,7 +15,7 @@ RewriteEngine On
 # Va ANTES de la excepción de "archivo real": si no, cualquier .sql de BD/
 # o archivo de Config/ se podría descargar con solo escribir su ruta.
 # ─────────────────────────────────────────────
-RewriteRule ^(Config|Controllers|Entity|Models|Views|Template|BD|Storage|Services|vendor)(/|$) - [F,L,NC]
+RewriteRule ^(Config|Controllers|Entity|Models|Views|Template|BD|Storage|Services|vendor|POS)(/|$) - [F,L,NC]
 RewriteRule (^|/)\.(git|env|user\.ini|htaccess) - [F,L,NC]
 RewriteRule (^|/)composer\.(json|lock)$ - [F,L,NC]
 

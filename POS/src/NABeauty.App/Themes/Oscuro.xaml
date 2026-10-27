@@ -1,0 +1,90 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--
+        TEMA OSCURO — solo tokens, mismas claves que Claro.xaml.
+        Base casi negra con un matiz vino (el negro #1A1416 del logo). El vino se aclara
+        para que botones y textos de marca mantengan contraste sobre fondo oscuro.
+    -->
+
+    <!-- Superficies -->
+    <SolidColorBrush x:Key="Fondo" Color="#110C0E"/>
+    <SolidColorBrush x:Key="Superficie" Color="#1C1518"/>
+    <SolidColorBrush x:Key="Superficie2" Color="#221A1D"/>
+    <SolidColorBrush x:Key="Entrada" Color="#181214"/>
+    <SolidColorBrush x:Key="Linea" Color="#372A2F"/>
+    <SolidColorBrush x:Key="LineaSuave" Color="#2B2125"/>
+    <SolidColorBrush x:Key="LineaFuerte" Color="#4A3A40"/>
+    <SolidColorBrush x:Key="FilaHover" Color="#261D21"/>
+    <SolidColorBrush x:Key="Seleccion" Color="#3A1F27"/>
+
+    <!-- Texto -->
+    <SolidColorBrush x:Key="Texto" Color="#F4EAEC"/>
+    <SolidColorBrush x:Key="Texto2" Color="#CDB9BF"/>
+    <SolidColorBrush x:Key="Texto3" Color="#A68F96"/>
+
+    <!-- Acento de marca -->
+    <SolidColorBrush x:Key="Acento" Color="#C22E44"/>
+    <SolidColorBrush x:Key="AcentoHover" Color="#D6455A"/>
+    <SolidColorBrush x:Key="SobreAcento" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AcentoTinta" Color="#F29AAA"/>
+    <SolidColorBrush x:Key="AcentoSuave" Color="#3A1F27"/>
+    <SolidColorBrush x:Key="AcentoBorde" Color="#7A3442"/>
+    <SolidColorBrush x:Key="MarcaClaro" Color="#F6D5DC"/>
+
+    <!-- Estados -->
+    <SolidColorBrush x:Key="Verde" Color="#6FD49A"/>
+    <SolidColorBrush x:Key="VerdeSuave" Color="#17301F"/>
+    <SolidColorBrush x:Key="Rojo" Color="#FF8A80"/>
+    <SolidColorBrush x:Key="RojoSuave" Color="#3A1A1C"/>
+    <SolidColorBrush x:Key="RojoBorde" Color="#6B2A2E"/>
+    <SolidColorBrush x:Key="Ambar" Color="#F2C46B"/>
+    <SolidColorBrush x:Key="AmbarSuave" Color="#33270F"/>
+    <SolidColorBrush x:Key="AmbarBorde" Color="#5E4A1E"/>
+    <SolidColorBrush x:Key="Azul" Color="#8DB4F5"/>
+    <SolidColorBrush x:Key="AzulSuave" Color="#1A2436"/>
+    <SolidColorBrush x:Key="Gris" Color="#B3A3A8"/>
+    <SolidColorBrush x:Key="GrisSuave" Color="#2A2226"/>
+
+    <!-- Menú lateral: negro del logo con matiz vino -->
+    <SolidColorBrush x:Key="MenuFondo" Color="#1A1114"/>
+    <SolidColorBrush x:Key="MenuBorde" Color="#2B2125"/>
+    <SolidColorBrush x:Key="MenuTexto" Color="#D9C3C9"/>
+    <SolidColorBrush x:Key="MenuGrupo" Color="#A68F96"/>
+    <SolidColorBrush x:Key="MenuHover" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="MenuActivo" Color="#3A1F27"/>
+    <SolidColorBrush x:Key="MenuActivoTexto" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="MenuSeparador" Color="#2B2125"/>
+
+    <!-- Tarjeta destacada y franjas de marca -->
+    <LinearGradientBrush x:Key="DestacadoFondo" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#8E1A2B" Offset="0"/>
+        <GradientStop Color="#6E1220" Offset="0.55"/>
+        <GradientStop Color="#470B15" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DestacadoTexto" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="DestacadoTexto2" Color="#F6D5DC"/>
+    <LinearGradientBrush x:Key="PanelMarca" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#8E1A2B" Offset="0"/>
+        <GradientStop Color="#6E1220" Offset="0.5"/>
+        <GradientStop Color="#3E0912" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Gráficos -->
+    <SolidColorBrush x:Key="GradienteBarra" Color="#D9576A"/>
+    <SolidColorBrush x:Key="BarraHoy" Color="#F29AAA"/>
+    <LinearGradientBrush x:Key="GradienteProgreso" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#C22E44" Offset="0"/>
+        <GradientStop Color="#F29AAA" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Pista" Color="#2B2125"/>
+    <SolidColorBrush x:Key="Barra" Color="#4A3A40"/>
+    <SolidColorBrush x:Key="BarraHover" Color="#6A5459"/>
+
+    <!-- Logos: en oscuro todo usa el logo blanco -->
+    <BitmapImage x:Key="LogoMenu" UriSource="pack://application:,,,/Assets/Marca/logo-sobre-oscuro.png"/>
+    <BitmapImage x:Key="LogoSuperficie" UriSource="pack://application:,,,/Assets/Marca/logo-sobre-oscuro.png"/>
+
+    <sys:String x:Key="IconoTema">&#xE706;</sys:String>
+    <sys:String x:Key="TextoTema">Modo claro</sys:String>
+</ResourceDictionary>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Interfaz WPF. Solo dibuja y enlaza: la lógica vive en Presentacion/Data/Core. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>NABeauty.App</RootNamespace>
+    <AssemblyName>NABeautyPOS</AssemblyName>
+    <ApplicationIcon>Assets\NABeauty.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+    <Product>N&amp;A Beauty POS</Product>
+    <Company>DeskCod</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- SQLite (incluye la librería nativa e_sqlite3). Misma versión que DeskCod: ya está en la caché de NuGet de esta PC. -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NABeauty.Presentacion\NABeauty.Presentacion.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\NABeauty.ico" />
+    <!-- Logos de N&A Beauty (fondo transparente): vino para fondos claros, blanco para fondos oscuros -->
+    <Resource Include="Assets\Marca\*.png" />
+    <!-- Fuentes de la marca incrustadas (licencia OFL, ver Assets\Fuentes\OFL-*.txt): las mismas de la tienda en línea -->
+    <Resource Include="Assets\Fuentes\*.ttf" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,237 @@
+<UserControl x:Class="NABeauty.App.Vistas.InicioView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Tablero de Inicio. Cada bloque se muestra según los permisos (el ViewModel ya no
+        entrega datos que el usuario no puede ver). Con la base vacía, la guía de primeros
+        pasos ocupa el lugar principal y cada lista dice por qué está vacía.
+    -->
+    <UserControl.Resources>
+        <!-- Fila de lista corta: título, subtítulo, valor y una insignia opcional -->
+        <DataTemplate x:Key="PlantillaFila">
+            <Border Style="{StaticResource FilaLista}" Padding="0,9">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="{Binding Titulo}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Subtitulo}" Style="{StaticResource TxtTenue}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Valor}" Style="{StaticResource TxtMonto}" HorizontalAlignment="Right"/>
+                        <TextBlock Text="{Binding ValorDetalle}" Style="{StaticResource TxtTenue}" HorizontalAlignment="Right"
+                                   Visibility="{Binding ValorDetalle, Converter={StaticResource NuloVis}}"/>
+                        <Border Style="{StaticResource Insignia}" Tag="{Binding Estado}" HorizontalAlignment="Right" Margin="0,3,0,0"
+                                Visibility="{Binding HayEstado, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="{Binding EstadoTexto}"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Lista vacía: ícono + motivo -->
+        <Style x:Key="Vacio" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,18,0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,22,14,24">
+
+            <!-- ── Saludo ── -->
+            <StackPanel Margin="0,0,14,18">
+                <TextBlock Text="{Binding Saludo}" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding Resumen}" Foreground="{DynamicResource Texto2}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- ── Primeros pasos (base vacía) ── -->
+            <Border Style="{StaticResource Tarjeta}" Margin="0,0,14,16" Padding="0"
+                    Visibility="{Binding MostrarPrimerosPasos, Converter={StaticResource BoolVis}}">
+                <StackPanel>
+                    <Border Background="{DynamicResource PanelMarca}" CornerRadius="8,8,0,0" Padding="22,16">
+                        <DockPanel>
+                            <Image DockPanel.Dock="Right" Source="{DynamicResource LogoMenu}" Height="48" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="BIENVENIDA AL POS DE N&amp;A BEAUTY" Style="{StaticResource TxtMarca}" FontSize="22" Foreground="White"/>
+                                <TextBlock Text="La base de datos está lista y vacía. Así se arranca:" Foreground="{DynamicResource DestacadoTexto2}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                    <ItemsControl ItemsSource="{Binding Pasos}" Margin="14,16,14,10">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="8,0,8,8">
+                                    <Border x:Name="Circulo" DockPanel.Dock="Left" Width="30" Height="30" CornerRadius="15" VerticalAlignment="Top"
+                                            Background="{DynamicResource AcentoSuave}" Margin="0,0,12,0">
+                                        <TextBlock x:Name="Marca" Text="{Binding Marca}" FontWeight="Bold" Foreground="{DynamicResource AcentoTinta}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Titulo}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Detalle}" Style="{StaticResource TxtTenue}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </DockPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Hecho}" Value="True">
+                                        <Setter TargetName="Circulo" Property="Background" Value="{DynamicResource VerdeSuave}"/>
+                                        <Setter TargetName="Marca" Property="Foreground" Value="{DynamicResource Verde}"/>
+                                        <Setter TargetName="Marca" Property="FontFamily" Value="{StaticResource Iconos}"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Indicadores de ventas ── -->
+            <ItemsControl ItemsSource="{Binding KpisVentas}" ItemTemplate="{StaticResource PlantillaKpi}"
+                          Visibility="{Binding VerVentas, Converter={StaticResource BoolVis}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- ── Indicadores de inventario ── -->
+            <ItemsControl ItemsSource="{Binding KpisInventario}" ItemTemplate="{StaticResource PlantillaKpi}"
+                          Visibility="{Binding VerInventario, Converter={StaticResource BoolVis}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- ── Gráfico + más vendidos ── -->
+            <Grid Margin="0,2,14,0" Visibility="{Binding VerVentas, Converter={StaticResource BoolVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.7*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource Tarjeta}">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding TotalCatorce}" Style="{StaticResource TxtTenue}" VerticalAlignment="Top" Margin="0,3,0,0"/>
+                            <TextBlock Text="Ventas de los últimos 14 días" Style="{StaticResource TxtTitulo}"/>
+                        </DockPanel>
+                        <Grid Height="200">
+                            <!-- Una sola serie en vino, barras con esquinas superiores redondeadas sobre la línea base.
+                                 La de hoy va en el tono más intenso. El monto exacto sale al pasar el mouse. -->
+                            <ItemsControl ItemsSource="{Binding Barras}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><UniformGrid Rows="1"/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="3,0" LastChildFill="False" Background="Transparent" ToolTip="{Binding Globo}">
+                                            <TextBlock x:Name="Dia" DockPanel.Dock="Bottom" Text="{Binding Etiqueta}" HorizontalAlignment="Center"
+                                                       Foreground="{DynamicResource Texto3}" FontSize="11" Margin="0,6,0,0"/>
+                                            <Border DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource LineaFuerte}" Margin="-3,0"/>
+                                            <Border x:Name="Barra" DockPanel.Dock="Bottom" Height="{Binding Altura}" MaxWidth="34"
+                                                    CornerRadius="4,4,0,0" Background="{DynamicResource GradienteBarra}"/>
+                                        </DockPanel>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding EsHoy}" Value="True">
+                                                <Setter TargetName="Barra" Property="Background" Value="{DynamicResource BarraHoy}"/>
+                                                <Setter TargetName="Dia" Property="FontWeight" Value="SemiBold"/>
+                                                <Setter TargetName="Dia" Property="Foreground" Value="{DynamicResource Texto}"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,24"
+                                        Visibility="{Binding SinVentasRecientes, Converter={StaticResource BoolVis}}">
+                                <TextBlock Text="&#xE9D2;" FontFamily="{StaticResource Iconos}" FontSize="24" Foreground="{DynamicResource Texto3}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Aún no hay ventas en estos días." Foreground="{DynamicResource Texto2}" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Cada venta de la caja se suma aquí al instante." Style="{StaticResource TxtTenue}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource Tarjeta}">
+                    <StackPanel>
+                        <TextBlock Text="Lo más vendido del mes" Style="{StaticResource TxtTitulo}"/>
+                        <ItemsControl ItemsSource="{Binding Top}" ItemTemplate="{StaticResource PlantillaFila}"/>
+                        <StackPanel Style="{StaticResource Vacio}" Visibility="{Binding HayTop, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE734;" FontFamily="{StaticResource Iconos}" FontSize="22" Foreground="{DynamicResource Texto3}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Sin ventas este mes todavía." Style="{StaticResource TxtTenue}" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ── Últimas ventas + por agotarse ── -->
+            <Grid Margin="0,0,14,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource Tarjeta}" Visibility="{Binding VerVentas, Converter={StaticResource BoolVis}}">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="Ver ventas" Style="{StaticResource BtnEnlace}" Margin="0"
+                                    Command="{Binding IrCommand}" CommandParameter="ventas"/>
+                            <TextBlock Text="Últimas ventas" Style="{StaticResource TxtTitulo}"/>
+                        </DockPanel>
+                        <ItemsControl ItemsSource="{Binding Ultimas}" ItemTemplate="{StaticResource PlantillaFila}"/>
+                        <StackPanel Style="{StaticResource Vacio}" Visibility="{Binding HayUltimas, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE7BF;" FontFamily="{StaticResource Iconos}" FontSize="22" Foreground="{DynamicResource Texto3}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Las ventas de la caja aparecerán aquí." Style="{StaticResource TxtTenue}" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Visibility="{Binding VerInventario, Converter={StaticResource BoolVis}}">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="Ver productos" Style="{StaticResource BtnEnlace}" Margin="0"
+                                    Command="{Binding IrCommand}" CommandParameter="productos"/>
+                            <TextBlock Text="Por agotarse" Style="{StaticResource TxtTitulo}"/>
+                        </DockPanel>
+                        <ItemsControl ItemsSource="{Binding Agotandose}" ItemTemplate="{StaticResource PlantillaFila}"/>
+                        <StackPanel Style="{StaticResource Vacio}" Visibility="{Binding HayAgotandose, Converter={StaticResource NoBoolVis}}">
+                            <TextBlock Text="&#xE73E;" FontFamily="{StaticResource Iconos}" FontSize="22" Foreground="{DynamicResource Verde}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Nada por reponer." Style="{StaticResource TxtTenue}" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ── Conexión con la tienda en línea ── -->
+            <Border Style="{StaticResource Panel}" Margin="0,0,14,0" Padding="16,12">
+                <DockPanel>
+                    <Border x:Name="IcoSync" DockPanel.Dock="Left" Width="34" Height="34" CornerRadius="17" Margin="0,0,12,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{DynamicResource AmbarSuave}"/>
+                                <Setter Property="TextElement.Foreground" Value="{DynamicResource Ambar}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SyncConfigurada}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource VerdeSuave}"/>
+                                        <Setter Property="TextElement.Foreground" Value="{DynamicResource Verde}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="&#xE774;" FontFamily="{StaticResource Iconos}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding SyncTitulo}" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SyncDetalle}" Style="{StaticResource TxtTenue}"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

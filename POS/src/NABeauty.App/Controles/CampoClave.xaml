@@ -1,0 +1,20 @@
+<UserControl x:Class="NABeauty.App.Controles.CampoClave"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Raiz" IsTabStop="False" Focusable="False">
+    <!--
+        Campo de contraseña con botón de ojo (mostrar / ocultar lo que se escribe).
+        Oculto: PasswordBox (no deja copiar ni queda en memoria como string enlazado).
+        Visible: TextBox con el mismo texto. Al ocultar, el texto vuelve al PasswordBox.
+        El relleno izquierdo se puede ampliar (Relleno) para poner un ícono encima, como en el login.
+    -->
+    <Grid>
+        <PasswordBox x:Name="CajaOculta" PasswordChanged="CajaOculta_PasswordChanged"
+                     Padding="{Binding Relleno, ElementName=Raiz}" MinHeight="{Binding MinHeight, ElementName=Raiz}"/>
+        <TextBox x:Name="CajaVisible" Visibility="Collapsed" TextChanged="CajaVisible_TextChanged"
+                 Padding="{Binding Relleno, ElementName=Raiz}" MinHeight="{Binding MinHeight, ElementName=Raiz}"/>
+        <Button x:Name="Ojo" Style="{StaticResource BtnIcono}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                Width="34" Height="30" Margin="0,0,3,0" FontSize="15" IsTabStop="False"
+                Content="&#xE890;" ToolTip="Mostrar contraseña" Click="Ojo_Click"/>
+    </Grid>
+</UserControl>

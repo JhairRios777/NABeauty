@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Acceso a datos y servicios de negocio.
+    Usa solo ADO.NET base (System.Data.Common): no depende de ningún paquete.
+    La app le entrega la conexión real (Microsoft.Data.Sqlite); las pruebas, otra.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>NABeauty.Data</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Sql\schema.sql" LogicalName="NABeauty.Data.schema.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NABeauty.Core\NABeauty.Core.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+<UserControl x:Class="NABeauty.App.Controles.SelectorPeriodoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Selector de período (DataContext = SelectorPeriodo). Un preset (Hoy, Este mes…) o
+        "Rango de fechas", que muestra los dos calendarios. Lo usan Ventas, Entradas y Reportes.
+    -->
+    <StackPanel Orientation="Horizontal">
+        <ComboBox Width="170" ItemsSource="{Binding Presets}" SelectedItem="{Binding Preset}" ToolTip="Período"/>
+        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Visibility="{Binding EsRango, Converter={StaticResource BoolVis}}">
+            <DatePicker Width="140" SelectedDate="{Binding Desde}" ToolTip="Desde"/>
+            <TextBlock Text="a" VerticalAlignment="Center" Margin="8,0" Foreground="{DynamicResource Texto2}"/>
+            <DatePicker Width="140" SelectedDate="{Binding Hasta}" ToolTip="Hasta (incluido)"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

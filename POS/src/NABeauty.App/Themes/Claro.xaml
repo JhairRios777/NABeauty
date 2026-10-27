@@ -1,0 +1,92 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--
+        TEMA CLARO — solo tokens. Las MISMAS claves existen en Oscuro.xaml.
+        Todo el XAML los consume con DynamicResource para que el cambio de tema sea en caliente.
+        Colores del logo de N&A Beauty: vino #9E1B2A, rosa #F6D5DC, negro #1A1416
+        (los mismos de la tienda en línea y su panel web).
+    -->
+
+    <!-- Superficies: blanco con un toque rosado, como la tienda -->
+    <SolidColorBrush x:Key="Fondo" Color="#FBF6F7"/>
+    <SolidColorBrush x:Key="Superficie" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Superficie2" Color="#FCF7F8"/>
+    <SolidColorBrush x:Key="Entrada" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Linea" Color="#EADCDF"/>
+    <SolidColorBrush x:Key="LineaSuave" Color="#F3E9EB"/>
+    <SolidColorBrush x:Key="LineaFuerte" Color="#D9C6CB"/>
+    <SolidColorBrush x:Key="FilaHover" Color="#FBF1F3"/>
+    <SolidColorBrush x:Key="Seleccion" Color="#F9E4E8"/>
+
+    <!-- Texto -->
+    <SolidColorBrush x:Key="Texto" Color="#1A1416"/>
+    <SolidColorBrush x:Key="Texto2" Color="#5C4A4F"/>
+    <SolidColorBrush x:Key="Texto3" Color="#76656A"/>
+
+    <!-- Acento de marca: Acento = relleno; AcentoTinta = texto/íconos sobre superficie -->
+    <SolidColorBrush x:Key="Acento" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="AcentoHover" Color="#7A1220"/>
+    <SolidColorBrush x:Key="SobreAcento" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AcentoTinta" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="AcentoSuave" Color="#F9E4E8"/>
+    <SolidColorBrush x:Key="AcentoBorde" Color="#EFB8C3"/>
+    <SolidColorBrush x:Key="MarcaClaro" Color="#F6D5DC"/>
+
+    <!-- Estados (texto / fondo / borde). Éxito en verde: el vino es de la marca, no de "todo bien" -->
+    <SolidColorBrush x:Key="Verde" Color="#1E6B3A"/>
+    <SolidColorBrush x:Key="VerdeSuave" Color="#DDF0E1"/>
+    <SolidColorBrush x:Key="Rojo" Color="#B42318"/>
+    <SolidColorBrush x:Key="RojoSuave" Color="#FDECEA"/>
+    <SolidColorBrush x:Key="RojoBorde" Color="#F3C4BE"/>
+    <SolidColorBrush x:Key="Ambar" Color="#8A5A0B"/>
+    <SolidColorBrush x:Key="AmbarSuave" Color="#FDF3DF"/>
+    <SolidColorBrush x:Key="AmbarBorde" Color="#EDD3A0"/>
+    <SolidColorBrush x:Key="Azul" Color="#1F4FA8"/>
+    <SolidColorBrush x:Key="AzulSuave" Color="#E8EFFC"/>
+    <SolidColorBrush x:Key="Gris" Color="#5F5458"/>
+    <SolidColorBrush x:Key="GrisSuave" Color="#F0ECED"/>
+
+    <!-- Menú lateral: vino de la marca, como el panel web -->
+    <SolidColorBrush x:Key="MenuFondo" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="MenuBorde" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="MenuTexto" Color="#F8E1E6"/>
+    <SolidColorBrush x:Key="MenuGrupo" Color="#F0C3CC"/>
+    <SolidColorBrush x:Key="MenuHover" Color="#1AFFFFFF"/>
+    <SolidColorBrush x:Key="MenuActivo" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="MenuActivoTexto" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="MenuSeparador" Color="#33FFFFFF"/>
+
+    <!-- Tarjeta destacada (KPI principal) y franjas de marca -->
+    <LinearGradientBrush x:Key="DestacadoFondo" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#B3243A" Offset="0"/>
+        <GradientStop Color="#9E1B2A" Offset="0.55"/>
+        <GradientStop Color="#741321" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DestacadoTexto" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="DestacadoTexto2" Color="#F6D5DC"/>
+    <LinearGradientBrush x:Key="PanelMarca" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#B3243A" Offset="0"/>
+        <GradientStop Color="#9E1B2A" Offset="0.5"/>
+        <GradientStop Color="#6E1220" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Gráficos: una sola serie en vino -->
+    <SolidColorBrush x:Key="GradienteBarra" Color="#9E1B2A"/>
+    <SolidColorBrush x:Key="BarraHoy" Color="#7A1220"/>
+    <LinearGradientBrush x:Key="GradienteProgreso" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#9E1B2A" Offset="0"/>
+        <GradientStop Color="#D9576A" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Pista" Color="#F1E4E7"/>
+    <SolidColorBrush x:Key="Barra" Color="#D9C6CB"/>
+    <SolidColorBrush x:Key="BarraHover" Color="#B9A1A8"/>
+
+    <!-- Logos: el menú es vino (logo blanco); la superficie es clara (logo vino) -->
+    <BitmapImage x:Key="LogoMenu" UriSource="pack://application:,,,/Assets/Marca/logo-sobre-oscuro.png"/>
+    <BitmapImage x:Key="LogoSuperficie" UriSource="pack://application:,,,/Assets/Marca/logo-sobre-claro.png"/>
+
+    <!-- Ícono del interruptor de tema: muestra el modo al que se cambia -->
+    <sys:String x:Key="IconoTema">&#xE708;</sys:String>
+    <sys:String x:Key="TextoTema">Modo oscuro</sys:String>
+</ResourceDictionary>

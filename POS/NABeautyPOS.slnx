@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NABeauty.Core/NABeauty.Core.csproj" />
+    <Project Path="src/NABeauty.Data/NABeauty.Data.csproj" />
+    <Project Path="src/NABeauty.Presentacion/NABeauty.Presentacion.csproj" />
+    <Project Path="src/NABeauty.App/NABeauty.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NABeauty.Tests/NABeauty.Tests.csproj" />
+  </Folder>
+</Solution>

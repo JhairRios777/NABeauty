@@ -1,0 +1,9 @@
+bin/
+obj/
+Publicado/
+*.log
+*.db
+*.db-shm
+*.db-wal
+.vs/
+*.user
